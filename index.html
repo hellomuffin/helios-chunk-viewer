@@ -1,0 +1,834 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Helios — Autoregressive Chunk Viewer</title>
+<style>
+:root{--bg:#0e1116;--card:#171c24;--bd:#262d39;--fg:#e6edf3;--mut:#8b97a7;--acc:#4cc2ff;--blend:#caa64a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+header{padding:32px 24px 12px;border-bottom:1px solid var(--bd)}
+h1{margin:0 0 6px;font-size:26px}
+.sub{color:var(--mut);max-width:820px}
+.sub code{background:#222a35;padding:1px 6px;border-radius:5px;color:var(--acc)}
+nav{position:sticky;top:0;background:rgba(14,17,22,.92);backdrop-filter:blur(6px);padding:12px 24px;border-bottom:1px solid var(--bd);z-index:5;display:flex;gap:8px;flex-wrap:wrap}
+.navchip{color:var(--fg);text-decoration:none;background:var(--card);border:1px solid var(--bd);padding:5px 11px;border-radius:999px;font-size:13px}
+.navchip:hover{border-color:var(--acc);color:var(--acc)}
+main{padding:8px 24px 80px;max-width:1500px;margin:0 auto}
+.task{border-top:1px solid var(--bd);padding:26px 0}
+.task h2{font-size:21px;margin:0 0 14px}
+.meta{color:var(--mut);font-size:13px;font-weight:400}
+.task-body{display:grid;grid-template-columns:360px 1fr;gap:26px;align-items:start}
+.full video{width:100%;border-radius:10px;border:1px solid var(--bd);background:#000}
+.full h3,.chunks h3{font-size:14px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px}
+.full ol{margin:0;padding-left:20px;color:#cdd6e0}
+.full ol li{margin-bottom:6px}
+.chunk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.chunk{margin:0;background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.chunk.blend{border-color:var(--blend)}
+.chunk video{width:100%;display:block;background:#000;aspect-ratio:640/384}
+.chunk-hd{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;gap:8px}
+.cidx{font-weight:700;font-size:12px;color:var(--acc)}
+.chunk.blend .cidx{color:var(--blend)}
+.clabel{font-size:11px;color:var(--mut);text-align:right}
+figcaption{padding:8px 10px 11px;font-size:12px;color:#bcc6d2;border-top:1px solid var(--bd)}
+small{font-weight:400;text-transform:none;letter-spacing:0}
+@media(max-width:820px){.task-body{grid-template-columns:1fr}}
+</style></head><body>
+<header>
+  <h1>Helios — Autoregressive Chunk Viewer</h1>
+  <p class="sub">Each task below is a single Helios run given a <b>list of step instructions</b>. Internally the model generates the video <b>chunk by chunk</b> (33 frames each, <code>num_latent_frames_per_chunk=9</code>), every chunk conditioned on the previous via <b>Unified History Injection</b>, with the text prompt switching per the step schedule (<code>interpolate_time=2</code>, <code>interpolation_steps=1</code>). For each prompt-set you see the <b>full stitched video</b> and the <b>individual chunks</b> with the instruction that drove each one. Gold-bordered chunks are prompt-interpolation (blend) chunks at a step boundary.</p>
+</header>
+<nav><a class="navchip" href="#task_0_fried_egg">Fried Egg</a><a class="navchip" href="#task_1_block_tower">Block Tower</a><a class="navchip" href="#task_2_robot_nav">Robot Nav</a><a class="navchip" href="#task_3_pour_over">Pour Over</a><a class="navchip" href="#task_4_stool_assembly">Stool Assembly</a><a class="navchip" href="#task_5_paper_crane">Paper Crane</a><a class="navchip" href="#task_6_potting">Potting</a><a class="navchip" href="#task_7_watercolor">Watercolor</a></nav>
+<main>
+    <section id="task_0_fried_egg" class="task">
+      <h2>Fried Egg <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_0_fried_egg/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>A hand cracks a single egg into a hot cast-iron pan with shimmering oil, top-down kitchen shot.</li><li>The egg white spreads and sizzles in the cast-iron pan, edges turning lacy and golden, bright orange yolk in the center, top-down shot.</li><li>A spatula slides under the egg and flips it over in the cast-iron pan, top-down kitchen shot.</li><li>The cooked fried egg is lifted from the pan and placed onto a white ceramic plate, top-down shot.</li><li>A slice of golden toast is placed on the white plate next to the fried egg, top-down shot.</li><li>Chopped green chives are sprinkled over the fried egg on the white plate, finished breakfast, top-down shot.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_0_fried_egg/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A hand cracks a single egg into a hot cast-iron pan with shimmering oil, top-down kitchen shot.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_0_fried_egg/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A hand cracks a single egg into a hot cast-iron pan with shimmering oil, top-down kitchen shot.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_0_fried_egg/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A hand cracks a single egg into a hot cast-iron pan with shimmering oil, top-down kitchen shot.»  →  «The egg white spreads and sizzles in the cast-iron pan, edges turning lacy and golden, bright orange yolk in the center, top-down shot.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_0_fried_egg/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The egg white spreads and sizzles in the cast-iron pan, edges turning lacy and golden, bright orange yolk in the center, top-down shot.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_0_fried_egg/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The egg white spreads and sizzles in the cast-iron pan, edges turning lacy and golden, bright orange yolk in the center, top-down shot.»  →  «A spatula slides under the egg and flips it over in the cast-iron pan, top-down kitchen shot.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_0_fried_egg/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A spatula slides under the egg and flips it over in the cast-iron pan, top-down kitchen shot.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_0_fried_egg/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A spatula slides under the egg and flips it over in the cast-iron pan, top-down kitchen shot.»  →  «The cooked fried egg is lifted from the pan and placed onto a white ceramic plate, top-down shot.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_0_fried_egg/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The cooked fried egg is lifted from the pan and placed onto a white ceramic plate, top-down shot.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_0_fried_egg/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The cooked fried egg is lifted from the pan and placed onto a white ceramic plate, top-down shot.»  →  «A slice of golden toast is placed on the white plate next to the fried egg, top-down shot.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_0_fried_egg/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A slice of golden toast is placed on the white plate next to the fried egg, top-down shot.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_0_fried_egg/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A slice of golden toast is placed on the white plate next to the fried egg, top-down shot.»  →  «Chopped green chives are sprinkled over the fried egg on the white plate, finished breakfast, top-down shot.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_0_fried_egg/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Chopped green chives are sprinkled over the fried egg on the white plate, finished breakfast, top-down shot.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_1_block_tower" class="task">
+      <h2>Block Tower <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_1_block_tower/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>A hand places a single red wooden cube on a wooden table, plain background, fixed camera.</li><li>A blue wooden cube is stacked neatly on top of the red cube on the wooden table, fixed camera.</li><li>A yellow wooden cube is stacked on top, the tower now three blocks tall on the wooden table.</li><li>A green wooden cube is placed on top, a straight four-block tower on the wooden table.</li><li>A small wooden triangular roof piece is set on top of the four-block tower, fixed camera.</li><li>The completed colorful wooden block tower with a triangular roof stands finished on the table.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_1_block_tower/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A hand places a single red wooden cube on a wooden table, plain background, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_1_block_tower/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A hand places a single red wooden cube on a wooden table, plain background, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_1_block_tower/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A hand places a single red wooden cube on a wooden table, plain background, fixed camera.»  →  «A blue wooden cube is stacked neatly on top of the red cube on the wooden table, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_1_block_tower/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A blue wooden cube is stacked neatly on top of the red cube on the wooden table, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_1_block_tower/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A blue wooden cube is stacked neatly on top of the red cube on the wooden table, fixed camera.»  →  «A yellow wooden cube is stacked on top, the tower now three blocks tall on the wooden table.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_1_block_tower/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A yellow wooden cube is stacked on top, the tower now three blocks tall on the wooden table.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_1_block_tower/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A yellow wooden cube is stacked on top, the tower now three blocks tall on the wooden table.»  →  «A green wooden cube is placed on top, a straight four-block tower on the wooden table.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_1_block_tower/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A green wooden cube is placed on top, a straight four-block tower on the wooden table.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_1_block_tower/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A green wooden cube is placed on top, a straight four-block tower on the wooden table.»  →  «A small wooden triangular roof piece is set on top of the four-block tower, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_1_block_tower/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A small wooden triangular roof piece is set on top of the four-block tower, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_1_block_tower/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A small wooden triangular roof piece is set on top of the four-block tower, fixed camera.»  →  «The completed colorful wooden block tower with a triangular roof stands finished on the table.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_1_block_tower/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The completed colorful wooden block tower with a triangular roof stands finished on the table.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_2_robot_nav" class="task">
+      <h2>Robot Nav <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_2_robot_nav/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>First-person robot point-of-view in a bright living room with a sofa and large windows, moving slowly forward.</li><li>First-person robot view moving forward toward an open doorway leading into a hallway.</li><li>First-person robot view traveling down a hallway with closed doors on either side.</li><li>First-person robot view turning left into a kitchen with counters and wooden cabinets.</li><li>First-person robot view approaching a tall stainless-steel refrigerator in the kitchen.</li><li>First-person robot view stopped directly in front of the closed stainless-steel refrigerator door.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_2_robot_nav/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot point-of-view in a bright living room with a sofa and large windows, moving slowly forward.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_2_robot_nav/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot point-of-view in a bright living room with a sofa and large windows, moving slowly forward.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_2_robot_nav/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «First-person robot point-of-view in a bright living room with a sofa and large windows, moving slowly forward.»  →  «First-person robot view moving forward toward an open doorway leading into a hallway.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_2_robot_nav/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot view moving forward toward an open doorway leading into a hallway.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_2_robot_nav/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «First-person robot view moving forward toward an open doorway leading into a hallway.»  →  «First-person robot view traveling down a hallway with closed doors on either side.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_2_robot_nav/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot view traveling down a hallway with closed doors on either side.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_2_robot_nav/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «First-person robot view traveling down a hallway with closed doors on either side.»  →  «First-person robot view turning left into a kitchen with counters and wooden cabinets.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_2_robot_nav/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot view turning left into a kitchen with counters and wooden cabinets.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_2_robot_nav/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «First-person robot view turning left into a kitchen with counters and wooden cabinets.»  →  «First-person robot view approaching a tall stainless-steel refrigerator in the kitchen.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_2_robot_nav/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot view approaching a tall stainless-steel refrigerator in the kitchen.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_2_robot_nav/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «First-person robot view approaching a tall stainless-steel refrigerator in the kitchen.»  →  «First-person robot view stopped directly in front of the closed stainless-steel refrigerator door.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_2_robot_nav/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>First-person robot view stopped directly in front of the closed stainless-steel refrigerator door.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_3_pour_over" class="task">
+      <h2>Pour Over <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_3_pour_over/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>A white paper filter is placed into a glass pour-over dripper on a clear glass carafe, cafe counter, fixed camera.</li><li>A scoop of ground coffee is poured into the paper filter forming a small dark mound, fixed camera.</li><li>Hot water is poured slowly from a gooseneck kettle over the coffee grounds, steam rising, fixed camera.</li><li>The coffee grounds bloom and bubble, dark liquid begins dripping into the glass carafe, fixed camera.</li><li>The glass carafe fills with rich brown coffee as dripping continues, fixed camera.</li><li>The brewed coffee is poured from the carafe into a white mug on the cafe counter, fixed camera.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_3_pour_over/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A white paper filter is placed into a glass pour-over dripper on a clear glass carafe, cafe counter, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_3_pour_over/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A white paper filter is placed into a glass pour-over dripper on a clear glass carafe, cafe counter, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_3_pour_over/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A white paper filter is placed into a glass pour-over dripper on a clear glass carafe, cafe counter, fixed camera.»  →  «A scoop of ground coffee is poured into the paper filter forming a small dark mound, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_3_pour_over/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A scoop of ground coffee is poured into the paper filter forming a small dark mound, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_3_pour_over/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A scoop of ground coffee is poured into the paper filter forming a small dark mound, fixed camera.»  →  «Hot water is poured slowly from a gooseneck kettle over the coffee grounds, steam rising, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_3_pour_over/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Hot water is poured slowly from a gooseneck kettle over the coffee grounds, steam rising, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_3_pour_over/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «Hot water is poured slowly from a gooseneck kettle over the coffee grounds, steam rising, fixed camera.»  →  «The coffee grounds bloom and bubble, dark liquid begins dripping into the glass carafe, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_3_pour_over/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The coffee grounds bloom and bubble, dark liquid begins dripping into the glass carafe, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_3_pour_over/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The coffee grounds bloom and bubble, dark liquid begins dripping into the glass carafe, fixed camera.»  →  «The glass carafe fills with rich brown coffee as dripping continues, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_3_pour_over/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The glass carafe fills with rich brown coffee as dripping continues, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_3_pour_over/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The glass carafe fills with rich brown coffee as dripping continues, fixed camera.»  →  «The brewed coffee is poured from the carafe into a white mug on the cafe counter, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_3_pour_over/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The brewed coffee is poured from the carafe into a white mug on the cafe counter, fixed camera.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_4_stool_assembly" class="task">
+      <h2>Stool Assembly <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_4_stool_assembly/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>Four light-wood stool parts lie disassembled on a workshop floor: a round seat and three legs, fixed camera.</li><li>A hand inserts the first wooden leg into a socket on the underside of the round seat, fixed camera.</li><li>The second wooden leg is inserted into its socket next to the first leg, fixed camera.</li><li>The third wooden leg is attached, all three legs now in place under the seat, fixed camera.</li><li>The wooden stool is flipped upright to stand on its three legs on the workshop floor.</li><li>The fully assembled three-legged wooden stool stands finished on the workshop floor, fixed camera.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Four light-wood stool parts lie disassembled on a workshop floor: a round seat and three legs, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Four light-wood stool parts lie disassembled on a workshop floor: a round seat and three legs, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «Four light-wood stool parts lie disassembled on a workshop floor: a round seat and three legs, fixed camera.»  →  «A hand inserts the first wooden leg into a socket on the underside of the round seat, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A hand inserts the first wooden leg into a socket on the underside of the round seat, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A hand inserts the first wooden leg into a socket on the underside of the round seat, fixed camera.»  →  «The second wooden leg is inserted into its socket next to the first leg, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The second wooden leg is inserted into its socket next to the first leg, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The second wooden leg is inserted into its socket next to the first leg, fixed camera.»  →  «The third wooden leg is attached, all three legs now in place under the seat, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The third wooden leg is attached, all three legs now in place under the seat, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The third wooden leg is attached, all three legs now in place under the seat, fixed camera.»  →  «The wooden stool is flipped upright to stand on its three legs on the workshop floor.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The wooden stool is flipped upright to stand on its three legs on the workshop floor.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The wooden stool is flipped upright to stand on its three legs on the workshop floor.»  →  «The fully assembled three-legged wooden stool stands finished on the workshop floor, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_4_stool_assembly/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The fully assembled three-legged wooden stool stands finished on the workshop floor, fixed camera.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_5_paper_crane" class="task">
+      <h2>Paper Crane <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_5_paper_crane/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>A flat square sheet of red origami paper lies centered on a white desk, top-down view.</li><li>The red paper is folded in half diagonally into a triangle, sharp crease, top-down view.</li><li>The triangle is folded again into a smaller triangle, hands pressing the crease, top-down view.</li><li>The corners of the red paper are folded up to begin forming the crane's wings, top-down view.</li><li>A thin neck and head are folded up from one point of the red paper shape, top-down view.</li><li>The finished red paper crane sits upright with spread wings on the white desk, top-down view.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_5_paper_crane/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A flat square sheet of red origami paper lies centered on a white desk, top-down view.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_5_paper_crane/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A flat square sheet of red origami paper lies centered on a white desk, top-down view.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_5_paper_crane/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A flat square sheet of red origami paper lies centered on a white desk, top-down view.»  →  «The red paper is folded in half diagonally into a triangle, sharp crease, top-down view.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_5_paper_crane/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The red paper is folded in half diagonally into a triangle, sharp crease, top-down view.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_5_paper_crane/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The red paper is folded in half diagonally into a triangle, sharp crease, top-down view.»  →  «The triangle is folded again into a smaller triangle, hands pressing the crease, top-down view.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_5_paper_crane/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The triangle is folded again into a smaller triangle, hands pressing the crease, top-down view.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_5_paper_crane/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The triangle is folded again into a smaller triangle, hands pressing the crease, top-down view.»  →  «The corners of the red paper are folded up to begin forming the crane's wings, top-down view.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_5_paper_crane/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The corners of the red paper are folded up to begin forming the crane's wings, top-down view.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_5_paper_crane/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The corners of the red paper are folded up to begin forming the crane's wings, top-down view.»  →  «A thin neck and head are folded up from one point of the red paper shape, top-down view.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_5_paper_crane/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A thin neck and head are folded up from one point of the red paper shape, top-down view.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_5_paper_crane/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A thin neck and head are folded up from one point of the red paper shape, top-down view.»  →  «The finished red paper crane sits upright with spread wings on the white desk, top-down view.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_5_paper_crane/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The finished red paper crane sits upright with spread wings on the white desk, top-down view.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_6_potting" class="task">
+      <h2>Potting <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_6_potting/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>An empty terracotta pot half-filled with dark soil sits on a wooden potting bench, fixed camera.</li><li>A hand digs a small hole in the center of the soil with a trowel, fixed camera.</li><li>A small green seedling is lowered roots-first into the hole in the soil, fixed camera.</li><li>Soil is pressed in around the base of the green seedling to hold it upright, fixed camera.</li><li>Water is poured from a small watering can over the soil, darkening it, fixed camera.</li><li>The freshly potted green seedling stands upright in the moist dark soil, finished, fixed camera.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_6_potting/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>An empty terracotta pot half-filled with dark soil sits on a wooden potting bench, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_6_potting/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>An empty terracotta pot half-filled with dark soil sits on a wooden potting bench, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_6_potting/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «An empty terracotta pot half-filled with dark soil sits on a wooden potting bench, fixed camera.»  →  «A hand digs a small hole in the center of the soil with a trowel, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_6_potting/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A hand digs a small hole in the center of the soil with a trowel, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_6_potting/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A hand digs a small hole in the center of the soil with a trowel, fixed camera.»  →  «A small green seedling is lowered roots-first into the hole in the soil, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_6_potting/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A small green seedling is lowered roots-first into the hole in the soil, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_6_potting/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A small green seedling is lowered roots-first into the hole in the soil, fixed camera.»  →  «Soil is pressed in around the base of the green seedling to hold it upright, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_6_potting/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Soil is pressed in around the base of the green seedling to hold it upright, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_6_potting/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «Soil is pressed in around the base of the green seedling to hold it upright, fixed camera.»  →  «Water is poured from a small watering can over the soil, darkening it, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_6_potting/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Water is poured from a small watering can over the soil, darkening it, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_6_potting/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «Water is poured from a small watering can over the soil, darkening it, fixed camera.»  →  «The freshly potted green seedling stands upright in the moist dark soil, finished, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_6_potting/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The freshly potted green seedling stands upright in the moist dark soil, finished, fixed camera.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section>
+    <section id="task_7_watercolor" class="task">
+      <h2>Watercolor <span class="meta">12 chunks · 393 frames · ~16s</span></h2>
+      <div class="task-body">
+        <div class="full">
+          <h3>Full stitched video</h3>
+          <video src="assets/task_7_watercolor/full.mp4" controls loop muted playsinline preload="metadata"></video>
+          <h3>Step instructions</h3>
+          <ol><li>A blank white canvas stands on a wooden easel, a hand holding a paintbrush, fixed camera.</li><li>A faint pencil horizon line and mountain outline are sketched on the white canvas, fixed camera.</li><li>The upper canvas is washed with blue watercolor for the sky, fixed camera.</li><li>Gray-purple watercolor mountains are painted along the horizon line on the canvas, fixed camera.</li><li>Green watercolor trees are added in the foreground below the mountains, fixed camera.</li><li>The finished watercolor landscape with blue sky, purple mountains, and green trees on the easel.</li></ol>
+        </div>
+        <div class="chunks">
+          <h3>Per-chunk breakdown <small>(each chunk = one autoregressive step, conditioned on the previous; hover to play)</small></h3>
+          <div class="chunk-grid">
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 0</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_7_watercolor/chunk_00.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A blank white canvas stands on a wooden easel, a hand holding a paintbrush, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 1</span>
+            <span class="clabel">step 1</span></div>
+          <video src="assets/task_7_watercolor/chunk_01.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A blank white canvas stands on a wooden easel, a hand holding a paintbrush, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 2</span>
+            <span class="clabel">interpolating step 1 → 2</span></div>
+          <video src="assets/task_7_watercolor/chunk_02.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A blank white canvas stands on a wooden easel, a hand holding a paintbrush, fixed camera.»  →  «A faint pencil horizon line and mountain outline are sketched on the white canvas, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 3</span>
+            <span class="clabel">step 2</span></div>
+          <video src="assets/task_7_watercolor/chunk_03.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>A faint pencil horizon line and mountain outline are sketched on the white canvas, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 4</span>
+            <span class="clabel">interpolating step 2 → 3</span></div>
+          <video src="assets/task_7_watercolor/chunk_04.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «A faint pencil horizon line and mountain outline are sketched on the white canvas, fixed camera.»  →  «The upper canvas is washed with blue watercolor for the sky, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 5</span>
+            <span class="clabel">step 3</span></div>
+          <video src="assets/task_7_watercolor/chunk_05.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The upper canvas is washed with blue watercolor for the sky, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 6</span>
+            <span class="clabel">interpolating step 3 → 4</span></div>
+          <video src="assets/task_7_watercolor/chunk_06.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «The upper canvas is washed with blue watercolor for the sky, fixed camera.»  →  «Gray-purple watercolor mountains are painted along the horizon line on the canvas, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 7</span>
+            <span class="clabel">step 4</span></div>
+          <video src="assets/task_7_watercolor/chunk_07.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Gray-purple watercolor mountains are painted along the horizon line on the canvas, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 8</span>
+            <span class="clabel">interpolating step 4 → 5</span></div>
+          <video src="assets/task_7_watercolor/chunk_08.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «Gray-purple watercolor mountains are painted along the horizon line on the canvas, fixed camera.»  →  «Green watercolor trees are added in the foreground below the mountains, fixed camera.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 9</span>
+            <span class="clabel">step 5</span></div>
+          <video src="assets/task_7_watercolor/chunk_09.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>Green watercolor trees are added in the foreground below the mountains, fixed camera.</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 10</span>
+            <span class="clabel">interpolating step 5 → 6</span></div>
+          <video src="assets/task_7_watercolor/chunk_10.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>blend: «Green watercolor trees are added in the foreground below the mountains, fixed camera.»  →  «The finished watercolor landscape with blue sky, purple mountains, and green trees on the easel.»</figcaption>
+        </figure>
+        <figure class="chunk ">
+          <div class="chunk-hd"><span class="cidx">chunk 11</span>
+            <span class="clabel">step 6</span></div>
+          <video src="assets/task_7_watercolor/chunk_11.mp4" muted loop playsinline preload="metadata"
+                 onmouseover="this.play()" onmouseout="this.pause();this.currentTime=0"></video>
+          <figcaption>The finished watercolor landscape with blue sky, purple mountains, and green trees on the easel.</figcaption>
+        </figure></div>
+        </div>
+      </div>
+    </section></main>
+</body></html>
